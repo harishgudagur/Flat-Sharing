@@ -1,0 +1,60 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: flatmate_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: flatmate_admin
+      POSTGRES_PASSWORD: flatmate_secret_password
+      POSTGRES_DB: flatmate_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U flatmate_admin -d flatmate_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - flatmate-network
+
+  backend:
+    container_name: flatmate_backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: development
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      API_PREFIX: api/v1
+      FRONTEND_URL: http://localhost:3001
+      ADMIN_URL: http://localhost:3002
+      DATABASE_URL: postgresql://flatmate_admin:flatmate_secret_password@postgres:5432/flatmate_db?schema=public
+      JWT_ACCESS_SECRET: flatmate_super_secret_jwt_access_key_min_32_chars
+      JWT_ACCESS_EXPIRATION: 15m
+      JWT_REFRESH_SECRET: flatmate_super_secret_jwt_refresh_key_min_32_chars
+      JWT_REFRESH_EXPIRATION: 7d
+      THROTTLE_TTL: 60
+      THROTTLE_LIMIT: 100
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - flatmate-network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  flatmate-network:
+    driver: bridge
+
