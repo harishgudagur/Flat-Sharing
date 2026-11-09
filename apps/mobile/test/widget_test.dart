@@ -1,30 +1,49 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:mobile/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('LoginScreen renders reference card with top pill switcher',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(const FlatmateApp());
+    await tester.pumpAndSettle();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Verify top pill switcher
+    expect(find.text('Log in'), findsNWidgets(2)); // Pill toggle + Button
+    expect(find.text('Create account'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    // Verify headline & subtitle
+    expect(find.text('Welcome back'), findsOneWidget);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Verify form fields
+    expect(find.byType(TextFormField), findsNWidgets(2)); // Identifier + Password
+  });
+
+  testWidgets('Switching to Create account tab displays registration fields',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(const FlatmateApp());
+    await tester.pumpAndSettle();
+
+    // Tap 'Create account' pill
+    await tester.tap(find.text('Create account'));
+    await tester.pumpAndSettle();
+
+    // Verify registration headline and fields
+    expect(find.text('Create an account'), findsOneWidget);
+    expect(find.byType(TextFormField), findsNWidgets(4)); // Email, Phone, Password, Confirm
+  });
+
+  testWidgets('Toggling OTP mode adjusts fields for OTP request',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(const FlatmateApp());
+    await tester.pumpAndSettle();
+
+    // Tap 'Log in with OTP code instead'
+    await tester.tap(find.text('Log in with OTP code instead'));
+    await tester.pumpAndSettle();
+
+    // Button should now be 'Send OTP Code'
+    expect(find.text('Send OTP Code'), findsOneWidget);
+    expect(find.byType(TextFormField), findsOneWidget);
   });
 }
