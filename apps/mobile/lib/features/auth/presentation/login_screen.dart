@@ -110,13 +110,36 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     if (response.success && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Account created successfully! Welcome to Flatmate.'),
-          backgroundColor: AppTheme.success,
-        ),
-      );
-      Navigator.of(context).pushReplacementNamed('/home');
+      final identifier = _emailController.text.trim().isNotEmpty
+          ? _emailController.text.trim()
+          : _phoneController.text.trim();
+
+      if (identifier.isNotEmpty) {
+        await _authService.sendOtp(
+          identifier: identifier,
+          purpose: 'VERIFICATION',
+        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Account created! Please verify your code.'),
+              backgroundColor: AppTheme.mint,
+            ),
+          );
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => OtpScreen(
+                identifier: identifier,
+                purpose: 'VERIFICATION',
+              ),
+            ),
+          );
+          return;
+        }
+      }
+      if (mounted) {
+        Navigator.of(context).pushReplacementNamed('/home');
+      }
     } else if (mounted) {
       setState(() {
         _errorMessage = response.message.isNotEmpty
