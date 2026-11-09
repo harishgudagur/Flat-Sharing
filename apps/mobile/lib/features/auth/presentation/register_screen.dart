@@ -122,10 +122,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: AppTheme.error.withOpacity(0.12),
+                      color: AppTheme.error.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: AppTheme.error.withOpacity(0.4),
+                        color: AppTheme.error.withValues(alpha: 0.4),
                       ),
                     ),
                     child: Row(
@@ -273,7 +273,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }
 

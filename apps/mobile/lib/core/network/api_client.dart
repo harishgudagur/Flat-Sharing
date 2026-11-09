@@ -75,7 +75,7 @@ class ApiClient {
         final refreshed = await _attemptRefreshToken();
         if (refreshed) {
           // Retry original request once
-          return post(endpoint, body: body, requiresAuth: requiresAuth);
+          return await post(endpoint, body: body, requiresAuth: requiresAuth);
         }
       }
 
@@ -112,7 +112,7 @@ class ApiClient {
           _tokenStorage.refreshToken != null) {
         final refreshed = await _attemptRefreshToken();
         if (refreshed) {
-          return get(endpoint, requiresAuth: requiresAuth);
+          return await get(endpoint, requiresAuth: requiresAuth);
         }
       }
 

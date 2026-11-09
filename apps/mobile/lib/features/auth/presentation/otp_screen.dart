@@ -158,10 +158,10 @@ class _OtpScreenState extends State<OtpScreen> {
                   width: 60,
                   height: 60,
                   decoration: BoxDecoration(
-                    color: AppTheme.mint.withOpacity(0.12),
+                    color: AppTheme.mint.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(18),
                     border: Border.all(
-                      color: AppTheme.mint.withOpacity(0.3),
+                      color: AppTheme.mint.withValues(alpha: 0.3),
                       width: 1.5,
                     ),
                   ),
@@ -199,10 +199,10 @@ class _OtpScreenState extends State<OtpScreen> {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: AppTheme.error.withOpacity(0.12),
+                    color: AppTheme.error.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: AppTheme.error.withOpacity(0.4),
+                      color: AppTheme.error.withValues(alpha: 0.4),
                     ),
                   ),
                   child: Text(
@@ -254,7 +254,7 @@ class _OtpScreenState extends State<OtpScreen> {
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide(
                             color: _controllers[index].text.isNotEmpty
-                                ? AppTheme.neonYellow.withOpacity(0.6)
+                                ? AppTheme.neonYellow.withValues(alpha: 0.6)
                                 : AppTheme.border,
                             width: 1.2,
                           ),
@@ -314,7 +314,8 @@ class _OtpScreenState extends State<OtpScreen> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }
 
