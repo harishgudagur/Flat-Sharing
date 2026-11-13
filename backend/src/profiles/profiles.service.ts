@@ -107,6 +107,20 @@ export class ProfilesService {
   }
 
   /**
+   * Fetch current authenticated user's lifestyle preferences.
+   */
+  async getMyLifestyle(userId: string) {
+    const profile = await this.prisma.userProfile.findUnique({
+      where: { userId },
+      select: {
+        lifestyle: true,
+      },
+    });
+
+    return profile?.lifestyle || null;
+  }
+
+  /**
    * Create or update current user's core profile.
    */
   async upsertMyProfile(userId: string, dto: UpsertProfileDto) {

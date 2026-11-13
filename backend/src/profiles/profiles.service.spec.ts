@@ -88,6 +88,29 @@ describe('ProfilesService', () => {
     });
   });
 
+  describe('getMyLifestyle', () => {
+    it('should return lifestyle preferences for current user', async () => {
+      const mockLifestyle = { id: 'life-1', sleepSchedule: 'EARLY_BIRD' };
+      prisma.userProfile.findUnique.mockResolvedValue({
+        lifestyle: mockLifestyle,
+      });
+
+      const result = await service.getMyLifestyle('user-1');
+      expect(result).toEqual(mockLifestyle);
+      expect(prisma.userProfile.findUnique).toHaveBeenCalledWith({
+        where: { userId: 'user-1' },
+        select: { lifestyle: true },
+      });
+    });
+
+    it('should return null if profile or lifestyle is not found', async () => {
+      prisma.userProfile.findUnique.mockResolvedValue(null);
+
+      const result = await service.getMyLifestyle('user-1');
+      expect(result).toBeNull();
+    });
+  });
+
   describe('upsertMyProfile', () => {
     const validDto = {
       displayName: 'Alice Smith',

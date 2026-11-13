@@ -8,6 +8,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { PROFILE_CONSTANTS } from '../../common/constants/profile.constants';
 
 export class InterestItemDto {
   @IsString()
@@ -23,9 +24,12 @@ export class InterestItemDto {
 
 export class SetInterestsDto {
   @IsArray({ message: 'interests must be an array' })
-  @ArrayMaxSize(20, { message: 'You can select up to 20 interests' })
+  @ArrayMaxSize(PROFILE_CONSTANTS.DEFAULT_MAX_INTERESTS, {
+    message: `You can select up to ${PROFILE_CONSTANTS.DEFAULT_MAX_INTERESTS} interests`,
+  })
   @ValidateNested({ each: true })
   @Type(() => InterestItemDto)
   interests: InterestItemDto[];
 }
+
 

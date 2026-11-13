@@ -3,14 +3,80 @@
 import { useState, useEffect } from "react";
 import { env } from "../config/env";
 
+export interface AuthUser {
+  id: string;
+  email?: string;
+  phoneNumber?: string;
+  status: string;
+  isEmailVerified: boolean;
+  isPhoneVerified: boolean;
+}
+
+export interface LifestylePreferencesData {
+  id?: string;
+  profileId?: string;
+  sleepSchedule?: string;
+  cleanliness?: string;
+  socialPreference?: string;
+  foodPreference?: string;
+  workSchedule?: string;
+  smokingPreference?: string;
+  drinkingPreference?: string;
+  petPreference?: string;
+  privacyPreference?: string;
+  nonNegotiables?: string[];
+}
+
+export interface UserPhotoData {
+  id: string;
+  url: string;
+  order: number;
+  isPrimary: boolean;
+}
+
+export interface UserLocationData {
+  id?: string;
+  latitude?: number;
+  longitude?: number;
+  cityName: string;
+  areaName?: string;
+}
+
+export interface UserInterestData {
+  id?: string;
+  interestName: string;
+  category?: string;
+}
+
+export interface UserProfileData {
+  id: string;
+  userId: string;
+  displayName: string;
+  dateOfBirth: string;
+  gender: string;
+  city: string;
+  preferredLocality?: string | null;
+  budgetMin: number;
+  budgetMax: number;
+  occupation?: string | null;
+  companyOrCollege?: string | null;
+  bio?: string | null;
+  moveInDate?: string | null;
+  isComplete: boolean;
+  lifestyle?: LifestylePreferencesData | null;
+  photos?: UserPhotoData[];
+  location?: UserLocationData | null;
+  interests?: UserInterestData[];
+}
+
 interface ProfileManagerProps {
-  authUser: any;
+  authUser: AuthUser;
   onLogout: () => void;
 }
 
 export function ProfileManager({ authUser, onLogout }: ProfileManagerProps) {
   const [activeTab, setActiveTab] = useState<"profile" | "lifestyle" | "account">("profile");
-  const [profile, setProfile] = useState<any | null>(null);
+  const [profile, setProfile] = useState<UserProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -548,6 +614,16 @@ export function ProfileManager({ authUser, onLogout }: ProfileManagerProps) {
               {renderChip("Loves Pets", petPreference, "LOVES_PETS", setPetPreference)}
               {renderChip("No Pets", petPreference, "NO_PETS", setPetPreference)}
               {renderChip("Has Pet", petPreference, "HAS_PET", setPetPreference)}
+            </div>
+          </div>
+
+          {/* Privacy Preference */}
+          <div>
+            <div className="text-xs font-semibold text-[#AAA] mb-1.5">🔒 Privacy Preference</div>
+            <div className="flex flex-wrap gap-2">
+              {renderChip("High Privacy", privacyPreference, "HIGH", setPrivacyPreference)}
+              {renderChip("Moderate", privacyPreference, "MODERATE", setPrivacyPreference)}
+              {renderChip("Low / Social", privacyPreference, "LOW", setPrivacyPreference)}
             </div>
           </div>
 

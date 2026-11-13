@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { env } from "../config/env";
-import { ProfileManager } from "../components/ProfileManager";
+import { ProfileManager, AuthUser } from "../components/ProfileManager";
 
 export default function HomePage() {
   const [tab, setTab] = useState<"login" | "register">("login");
@@ -20,7 +20,7 @@ export default function HomePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [infoMessage, setInfoMessage] = useState<string | null>(null);
-  const [authUser, setAuthUser] = useState<any | null>(null);
+  const [authUser, setAuthUser] = useState<AuthUser | null>(null);
 
   const otpInputRefs = useRef<(HTMLInputElement | null)[]>([]);
 

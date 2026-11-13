@@ -10,6 +10,7 @@ describe('ProfilesController', () => {
   beforeEach(async () => {
     service = {
       getMyProfile: jest.fn(),
+      getMyLifestyle: jest.fn(),
       upsertMyProfile: jest.fn(),
       updateLifestyle: jest.fn(),
       updateLocation: jest.fn(),
@@ -42,6 +43,14 @@ describe('ProfilesController', () => {
     const result = await controller.getMyProfile('user-1');
     expect(result.data).toEqual({ id: 'prof-1', displayName: 'Sam' });
     expect(result.message).toBe('Profile retrieved successfully');
+  });
+
+  it('should get current user lifestyle preferences', async () => {
+    service.getMyLifestyle.mockResolvedValue({ sleepSchedule: 'EARLY_BIRD' });
+
+    const result = await controller.getMyLifestyle('user-1');
+    expect(result.data).toEqual({ sleepSchedule: 'EARLY_BIRD' });
+    expect(result.message).toBe('Lifestyle preferences retrieved successfully');
   });
 
   it('should upsert profile', async () => {

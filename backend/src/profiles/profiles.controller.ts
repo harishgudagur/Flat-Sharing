@@ -64,10 +64,10 @@ export class ProfilesController {
   @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get('me/lifestyle')
   async getMyLifestyle(@CurrentUser('userId') userId: string) {
-    const profile = await this.profilesService.getMyProfile(userId);
+    const lifestyle = await this.profilesService.getMyLifestyle(userId);
     return {
       message: 'Lifestyle preferences retrieved successfully',
-      data: profile?.lifestyle || null,
+      data: lifestyle,
     };
   }
 
