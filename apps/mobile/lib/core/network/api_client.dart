@@ -127,6 +127,87 @@ class ApiClient {
     }
   }
 
+  Future<ApiResponse<dynamic>> put(
+    String endpoint, {
+    Map<String, dynamic>? body,
+    bool requiresAuth = true,
+  }) async {
+    try {
+      final uri = Uri.parse('$baseUrl$endpoint');
+      final headers = <String, String>{
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      };
+
+      if (requiresAuth && _tokenStorage.accessToken != null) {
+        headers['Authorization'] = 'Bearer ${_tokenStorage.accessToken}';
+      }
+
+      final response = await http.put(
+        uri,
+        headers: headers,
+        body: body != null ? jsonEncode(body) : null,
+      );
+
+      final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+
+      if (response.statusCode == 401 &&
+          requiresAuth &&
+          _tokenStorage.refreshToken != null) {
+        final refreshed = await _attemptRefreshToken();
+        if (refreshed) {
+          return await put(endpoint, body: body, requiresAuth: requiresAuth);
+        }
+      }
+
+      return ApiResponse.fromJson(jsonResponse, null);
+    } catch (e) {
+      return ApiResponse(
+        success: false,
+        statusCode: 500,
+        message: 'Network connection error: ${e.toString()}',
+        error: 'NetworkError',
+      );
+    }
+  }
+
+  Future<ApiResponse<dynamic>> delete(
+    String endpoint, {
+    bool requiresAuth = true,
+  }) async {
+    try {
+      final uri = Uri.parse('$baseUrl$endpoint');
+      final headers = <String, String>{
+        'Accept': 'application/json',
+      };
+
+      if (requiresAuth && _tokenStorage.accessToken != null) {
+        headers['Authorization'] = 'Bearer ${_tokenStorage.accessToken}';
+      }
+
+      final response = await http.delete(uri, headers: headers);
+      final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+
+      if (response.statusCode == 401 &&
+          requiresAuth &&
+          _tokenStorage.refreshToken != null) {
+        final refreshed = await _attemptRefreshToken();
+        if (refreshed) {
+          return await delete(endpoint, requiresAuth: requiresAuth);
+        }
+      }
+
+      return ApiResponse.fromJson(jsonResponse, null);
+    } catch (e) {
+      return ApiResponse(
+        success: false,
+        statusCode: 500,
+        message: 'Network connection error: ${e.toString()}',
+        error: 'NetworkError',
+      );
+    }
+  }
+
   Future<bool> _attemptRefreshToken() async {
     final currentRefreshToken = _tokenStorage.refreshToken;
     if (currentRefreshToken == null) return false;
