@@ -16,11 +16,11 @@ Phase 2: Authentication [COMPLETED]
 - API integration (Standard response envelope, token storage, Bearer interceptor, token rotation)
 - Testing (26/26 backend unit tests, 10/10 E2E integration tests passing)
 
-Phase 3: User Profiles
-- Profile APIs
-- Lifestyle preferences
-- Profile UI
-- Testing
+Phase 3: User Profiles [COMPLETED]
+- Profile APIs (CRUD, public discovery view with IDOR protection, photos, location, interests)
+- Lifestyle preferences (9-point habit attributes, non-negotiables, server-side completeness check)
+- Profile UI (Flutter mobile: ProfileScreen, EditProfileScreen, LifestylePreferencesScreen; Next.js website: ProfileManager)
+- Testing (47/47 backend unit tests, 6/6 Flutter widget tests, 0 analyze errors, 0 tsc errors)
 
 Phase 4: Flatmate Matching
 - Matching algorithm

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { env } from "../config/env";
+import { ProfileManager, AuthUser } from "../components/ProfileManager";
 
 export default function HomePage() {
   const [tab, setTab] = useState<"login" | "register">("login");
@@ -19,7 +20,7 @@ export default function HomePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [infoMessage, setInfoMessage] = useState<string | null>(null);
-  const [authUser, setAuthUser] = useState<any | null>(null);
+  const [authUser, setAuthUser] = useState<AuthUser | null>(null);
 
   const otpInputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -290,33 +291,13 @@ export default function HomePage() {
 
         {/* Right Column: Floating Auth Card (Matches User Reference Image) */}
         <div className="lg:col-span-5 flex justify-center">
-          <div className="w-full max-w-[420px] bg-[#151515] border border-[#2A2A2A] rounded-3xl p-7 shadow-2xl relative overflow-hidden">
+          <div className="w-full max-w-[460px] bg-[#151515] border border-[#2A2A2A] rounded-3xl p-7 shadow-2xl relative overflow-hidden">
             {/* Ambient subtle glow */}
             <div className="absolute -top-20 -right-20 w-44 h-44 bg-[#D9FF43]/10 rounded-full blur-3xl pointer-events-none" />
 
             {authUser ? (
-              /* Authenticated View */
-              <div className="text-center py-8 space-y-4">
-                <div className="w-16 h-16 rounded-full bg-[#65E6B5]/15 border border-[#65E6B5]/40 text-[#65E6B5] flex items-center justify-center text-3xl mx-auto">
-                  ✓
-                </div>
-                <h3 className="text-2xl font-bold">Authenticated!</h3>
-                <p className="text-sm text-[#A0A0A0]">
-                  Welcome back, <strong className="text-white">{authUser.email || authUser.phoneNumber}</strong>
-                </p>
-                <div className="p-4 rounded-xl bg-[#1F1F1F] border border-[#2A2A2A] text-left text-xs space-y-1 text-[#888]">
-                  <div>User ID: <span className="font-mono text-[#AAA]">{authUser.id}</span></div>
-                  <div>Account Status: <span className="text-[#65E6B5] font-semibold">{authUser.status}</span></div>
-                  <div>Email Verified: <span className={authUser.isEmailVerified ? "text-[#65E6B5]" : "text-[#FF6584]"}>{authUser.isEmailVerified ? "Yes" : "No"}</span></div>
-                  <div>Phone Verified: <span className={authUser.isPhoneVerified ? "text-[#65E6B5]" : "text-[#FF6584]"}>{authUser.isPhoneVerified ? "Yes" : "No"}</span></div>
-                </div>
-                <button
-                  onClick={handleLogout}
-                  className="w-full py-3 rounded-xl bg-[#222] hover:bg-[#333] text-sm font-semibold transition cursor-pointer"
-                >
-                  Log out
-                </button>
-              </div>
+              /* Authenticated Profile & Lifestyle Manager View */
+              <ProfileManager authUser={authUser} onLogout={handleLogout} />
             ) : isOtpMode ? (
               /* OTP Authentication Section */
               <div>
